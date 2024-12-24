@@ -10,13 +10,15 @@ DataBase::DataBase(QObject *parent)
     simpleQuery = new QSqlQuery();
 
     queryModel = new QSqlQueryModel;
-    queryModel->setHeaderData(0, Qt::Horizontal, QObject::tr("Название"));
-    queryModel->setHeaderData(1, Qt::Horizontal, QObject::tr("Описание"));
-}
+    tableModel = new QSqlTableModel(this, *dataBase);
 
+}
 DataBase::~DataBase()
 {
     delete dataBase;
+    delete simpleQuery;
+    delete queryModel;
+    delete tableModel;
 }
 
 /*!
@@ -73,21 +75,19 @@ void DataBase::DisconnectFromDataBase(QString nameDb)
  */
 void DataBase::RequestToDB(int request)
 {
-
-    if(request == requestComedy){
-        queryModel->setHeaderData(0,Qt::Horizontal, tr("Название фильма"));
-        queryModel->setHeaderData(1,Qt::Horizontal, tr("Описание фильма"));
-
+    if(request + 1 == requestAllFilms){
+        tableModel->setTable("film");
+        tableModel->select();
+        emit sig_SendDataFromDB(tableModel, request);
+    }
+    else if(request + 1 == requestComedy){
         queryModel->setQuery("SELECT title, description FROM film f JOIN film_category fc on f.film_id = fc.film_id JOIN category c on c.category_id = fc.category_id WHERE c.name = 'Comedy'", *dataBase);
+        emit sig_SendDataFromDB(queryModel, request);
     }
-    else if(request == requestHorrors){
-        queryModel->setHeaderData(0,Qt::Horizontal, tr("Название фильма"));
-        queryModel->setHeaderData(1,Qt::Horizontal, tr("Описание фильма"));
-
+    else if(request + 1 == requestHorrors){
         queryModel->setQuery("SELECT title, description FROM film f JOIN film_category fc on f.film_id = fc.film_id JOIN category c on c.category_id = fc.category_id WHERE c.name = 'Horror'", *dataBase);
+        emit sig_SendDataFromDB(queryModel, request);
     }
-    emit sig_SendDataFromDB(queryModel, request);
-
 
 }
 

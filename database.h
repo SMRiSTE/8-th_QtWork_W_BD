@@ -7,6 +7,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
+#include <QSqlTableModel>
 
 
 #define POSTGRE_DRIVER "QPSQL"
@@ -52,7 +53,7 @@ public:
 
 signals:
 
-   void sig_SendDataFromDB(const QSqlQueryModel *model, int typeR);
+   void sig_SendDataFromDB(QAbstractItemModel *model, int typeR);
    void sig_SendStatusConnection(bool);
 
 
@@ -62,6 +63,7 @@ private:
     QSqlDatabase* dataBase;
     QSqlQuery* simpleQuery;
     QSqlQueryModel* queryModel;
+    QSqlTableModel* tableModel;
     QTableView* tv;
 
 };

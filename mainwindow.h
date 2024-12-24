@@ -24,7 +24,7 @@ public:
 
 
 public slots:
-    void ScreenDataFromDB(const QSqlQueryModel *widget, int typeRequest);
+    void ScreenDataFromDB(QAbstractItemModel *widget, int typeRequest);
     void ReceiveStatusConnectionToDB(bool status);
 
 
@@ -38,6 +38,8 @@ private slots:
 
     void on_cb_category_activated(int index);
 
+    void on_pb_clear_clicked();
+
 signals:
     void sig_RequestToDb(QString request);
 
@@ -50,7 +52,7 @@ private:
     DataBase* dataBase;
     QMessageBox* msg;
     QAbstractItemModel* itemMod;
-    int index;
+    int index = 0;
 
     QString request = "SELECT title, release_year, c.name  FROM film f "
                       "JOIN film_category fc on f.film_id = fc.film_id "

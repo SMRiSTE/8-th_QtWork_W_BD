@@ -50,6 +50,9 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete dataBase;
+    delete dataDb;
+    delete msg;
 }
 
 /*!
@@ -110,10 +113,13 @@ void MainWindow::on_pb_request_clicked()
  * \param widget
  * \param typeRequest
  */
-void MainWindow::ScreenDataFromDB(const QSqlQueryModel *model, int typeRequest)
+void MainWindow::ScreenDataFromDB(QAbstractItemModel *model, int typeRequest)
 {
     // Получаем модель из переданного виджета
-    ui->tableView->setModel(const_cast<QSqlQueryModel*>(model)); // Устанавливаем модель в QTableView, делаем const cast.
+    ui->tableView->setModel(model);
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Название"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Описание"));
+    ui->tableView->resizeColumnsToContents();
     ///Тут должен быть код ДЗ
 
 
@@ -147,3 +153,9 @@ void MainWindow::on_cb_category_activated(int index)
 {
     this->index = index;
 }
+
+void MainWindow::on_pb_clear_clicked()
+{
+    ui->tableView->setModel(nullptr);
+}
+
